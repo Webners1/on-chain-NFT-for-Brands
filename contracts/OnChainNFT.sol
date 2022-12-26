@@ -12,7 +12,7 @@ import "hardhat/console.sol";
 
 /// @title OnChainNFT
 /// @notice Implements an on-chain NFT
-contract OnChainNFT is ERC721URIStorage, Ownable {
+contract ProductNFT is ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
@@ -31,11 +31,11 @@ contract OnChainNFT is ERC721URIStorage, Ownable {
 
     ///@notice generate tokenURI as a Base64 string
     ///@return base64 string of tokenURI
-    function formatTokenURI(string memory imageURI) internal pure returns(string memory) {
+    function formatTokenURI(string memory imageURI,string memory name, string memory description) internal pure returns(string memory) {
         string memory baseURL = "data:application/json;base64,";
         string memory json = string(
                 abi.encodePacked(
-                     '{"name": "On-chain NFT", "description": "onchain NFT with svg image", "image": "', 
+                     '{"name":"', name,'" ,"description":"', description,'", "image": "', 
                        imageURI, '"}'
                 )
         );
@@ -46,10 +46,8 @@ contract OnChainNFT is ERC721URIStorage, Ownable {
 
     ///@notice mint a new token
     ///@return tokenId
-    function mint(string memory svg) public onlyOwner returns(uint) {
-        string memory imageURI = formatSVGimageURI(svg);
-        string memory tokenURI = formatTokenURI(imageURI);
-
+    function mint(string memory imageUrl, string memory name, string memory description) public onlyOwner returns(uint) {
+        string memory tokenURI = formatTokenURI(imageUrl,name,description);
         _tokenIds.increment();
         uint newItemId = _tokenIds.current(); 
 
